@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from "electron";
 import https from "https";
 import { ILoggerCallback, LogLevel } from "@azure/msal-common";
-import { LogEntry } from "./SimpleLogger";
-import { msalConfig } from "./MsalConfig";
+import { LogEntry } from "./SimpleLogger.js";
+import { msalConfig } from "./MsalConfig.js";
 
 export interface InteractiveAcquireAuthCodeResult {
   authCode?: string;
@@ -27,7 +27,7 @@ function getTenantUrl(logger: ILoggerCallback, envUrl: string): Promise<string> 
           logger(LogLevel.Verbose, `getTenantUrl: ${tenantAuthUrl}`, false);
           resolve(tenantAuthUrl);
         } catch (err) {
-          const message = `Failed to parse 'www-authenticate' header from Environment ${wwwAuthenticateHeader}`;
+          const message = `Failed to parse 'www-authenticate' header from Environment ${wwwAuthenticateHeader}: ${err}`;
           logger(LogLevel.Error, `getTenantUrl: ${message}`, false);
           reject(message);
         }

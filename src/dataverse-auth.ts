@@ -1,32 +1,36 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-use-before-define */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const electron = require("electron/");
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import proc from "child_process";
 import { exit } from "process";
-import { InteractiveAcquireAuthCodeResult } from "./MsalAuth/InteractiveAuthenticate";
+import { InteractiveAcquireAuthCodeResult } from "./MsalAuth/InteractiveAuthenticate.js";
 import {
   acquireToken,
   acquireTokenByCodeMsal,
   acquireTokenUsingDeviceCode,
   getAllUsers,
   removeToken,
-} from "./MsalAuth/MsalNodeAuth";
-import { version } from "./version";
-import { prompt } from "enquirer";
-import { SimpleLogger } from "./MsalAuth/SimpleLogger";
+} from "./MsalAuth/MsalNodeAuth.js";
+import { version } from "./version.js";
+import enquirer from "enquirer";
+import { SimpleLogger } from "./MsalAuth/SimpleLogger.js";
 import chalk from "chalk";
-import { DataverseAuthArgs, DataverseAuthCommands } from "./DataverseAuthArgs";
+import { DataverseAuthArgs, DataverseAuthCommands } from "./DataverseAuthArgs.js";
+
+const require = createRequire(import.meta.url);
+const electron = require("electron/");
+const { prompt } = enquirer;
 console.log(chalk.yellow(`dataverse-auth v${version}`));
 console.log(
   chalk.yellow(`
   NOTE: `) +
-    chalk.gray(`Version 2 of dataverse-auth is not compatible with version Version 1 of dataverse-ify and dataverse-gen.
+  chalk.gray(`Version 2 of dataverse-auth is not compatible with version Version 1 of dataverse-ify and dataverse-gen.
   Use npx dataverse-auth@1 instead if you want to continue to use the older version.
   `),
 );
 
-const currentDir = __dirname;
+const currentDir = dirname(fileURLToPath(import.meta.url));
 
 main();
 
@@ -175,7 +179,6 @@ async function interactiveAuth(args: DataverseAuthArgs): Promise<void> {
       onCloseCallback(authResult, args);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-function-return-type
     const handleTerminationSignal = function (signal: any) {
       process.on(signal, function signalHandler() {
         if (!child.killed) {

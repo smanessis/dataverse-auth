@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 import minimist from "minimist";
 export enum DataverseAuthCommands {
   TestConnection = "test-connection",

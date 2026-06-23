@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { LogLevel } from "@azure/msal-node";
-import { interactiveAcquireAuthCode, InteractiveAcquireAuthCodeResult } from "./MsalAuth/InteractiveAuthenticate";
-import { SimpleLogger } from "./MsalAuth/SimpleLogger";
+import { interactiveAcquireAuthCode, InteractiveAcquireAuthCodeResult } from "./MsalAuth/InteractiveAuthenticate.js";
+import { SimpleLogger } from "./MsalAuth/SimpleLogger.js";
 import { exit } from "process";
 import minimist from "minimist";
 
@@ -15,7 +15,7 @@ function outputResult(result: InteractiveAcquireAuthCodeResult): void {
 
 const logger = new SimpleLogger();
 process.setUncaughtExceptionCaptureCallback((error) => {
-  logger.Log(LogLevel.Error, error.message);
+  logger.Log(LogLevel.Error, (error as Error).message);
   outputResult({ log: logger?.output });
   exit(1);
 });
@@ -27,7 +27,6 @@ if (!argEnvUrl) {
 // Either <tenantUrl> <environmentUrl> can be provided
 // Or just <environmentUrl> and we lookup the <tenantUrl>
 
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
 interactiveAcquireAuthCode(logger.Log, argEnvUrl, argTenant)
   .then((authCode) => {
     outputResult({ authCode: authCode, log: logger?.output });

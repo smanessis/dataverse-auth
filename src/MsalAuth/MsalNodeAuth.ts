@@ -11,12 +11,11 @@ import {
   PublicClientApplication,
   SilentFlowRequest,
 } from "@azure/msal-node";
-import fetch from "node-fetch";
 import * as fs from "fs";
 import * as os from "os";
-import { msalConfig } from "./MsalConfig";
+import { msalConfig } from "./MsalConfig.js";
 import { ILoggerCallback, LogLevel } from "@azure/msal-common";
-import { MsalCachePlugin } from "./MsalCachePlugin";
+import { MsalCachePlugin } from "./MsalCachePlugin.js";
 
 export interface UserLookup {
   [index: string]: string;
@@ -255,7 +254,6 @@ async function whoAmI(environmentUrl: string, response: AuthenticationResult): P
   if (whoAmIResponse.status !== 200) {
     throw `WhoAmI request failed with ${whoAmIResponse.statusText}`;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const whoAmIResponseData = (await whoAmIResponse.json()) as any;
   return whoAmIResponseData.UserId as string;
 }
